@@ -1,7 +1,15 @@
+export interface Photo {
+  id: number;
+  publicId: string;
+  title: string;
+  category: string;
+  description?: string;
+}
+
 const CLOUDINARY_CLOUD_NAME = 'b9wkiwrj';
 const CLOUDINARY_BASE_URL = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/`;
 
-export const photos = [
+export const photos: Photo[] = [
   {
     id: 1,
     publicId: 'photo16.jpg_tgjzzh',
@@ -11,7 +19,7 @@ export const photos = [
 ];
 
 // Helper to generate Cloudinary URLs with transformations
-export const getPhotoUrl = (publicId, transformation = '') => {
+export const getPhotoUrl = (publicId: string, transformation = ''): string => {
   return `${CLOUDINARY_BASE_URL}${transformation}${publicId}`;
 };
 

@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { photos, getPhotoUrl, transforms } from '../data/photos';
+import { photos, getPhotoUrl, transforms, Photo } from '../data/photos';
 import PhotoModal from './PhotoModal';
 
 const Gallery = () => {
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>('All');
 
   const categories = ['All', ...new Set(photos.map(photo => photo.category))];
 

@@ -1,10 +1,15 @@
 import { useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { getPhotoUrl, transforms, photos } from '../data/photos';
+import { getPhotoUrl, transforms, photos, Photo } from '../data/photos';
 
-const PhotoModal = ({ photo, onClose }) => {
+interface PhotoModalProps {
+  photo: Photo;
+  onClose: () => void;
+}
+
+const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose();
       } else if (e.key === 'ArrowLeft') {
