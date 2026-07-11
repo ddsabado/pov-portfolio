@@ -1,22 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getPhotoUrl, transforms, photos, Photo } from '../data/photos';
 
 interface PhotoModalProps {
   photo: Photo;
   onClose: () => void;
+  onNavigate: (photo: Photo) => void;
 }
 
-const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
+const PhotoModal = ({ photo, onClose, onNavigate }: PhotoModalProps) => {
+  const navigatePhoto = useCallback((direction: number) => {
+    const currentIndex = photos.findIndex(p => p.id === photo.id);
+    const newIndex = (currentIndex + direction + photos.length) % photos.length;
+    onNavigate(photos[newIndex]);
+  }, [photo, onNavigate]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      } else if (e.key === 'ArrowLeft') {
-        navigatePhoto(-1);
-      } else if (e.key === 'ArrowRight') {
-        navigatePhoto(1);
-      }
+      if (e.key === 'Escape') onClose();
+      else if (e.key === 'ArrowLeft') navigatePhoto(-1);
+      else if (e.key === 'ArrowRight') navigatePhoto(1);
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -26,14 +29,7 @@ const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [photo]);
-
-  const navigatePhoto = (direction) => {
-    const currentIndex = photos.findIndex(p => p.id === photo.id);
-    const newIndex = (currentIndex + direction + photos.length) % photos.length;
-    const newPhoto = photos[newIndex];
-    window.history.replaceState(null, '', `#photo-${newPhoto.id}`);
-  };
+  }, [photo, onClose, navigatePhoto]);
 
   return (
     <div
@@ -49,10 +45,7 @@ const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
       </button>
 
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          navigatePhoto(-1);
-        }}
+        onClick={(e) => { e.stopPropagation(); navigatePhoto(-1); }}
         className="absolute left-4 text-white hover:text-gray-300 transition-colors z-10"
         aria-label="Previous photo"
       >
@@ -60,10 +53,7 @@ const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
       </button>
 
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          navigatePhoto(1);
-        }}
+        onClick={(e) => { e.stopPropagation(); navigatePhoto(1); }}
         className="absolute right-4 text-white hover:text-gray-300 transition-colors z-10"
         aria-label="Next photo"
       >
@@ -77,14 +67,8 @@ const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
         <img
           src={getPhotoUrl(photo.publicId, transforms.fullRes)}
           alt={photo.title}
-          className="max-w-full max-h-[80vh] object-contain rounded-lg"
+          className="max-w-full max-h-[85vh] object-contain"
         />
-        <div className="mt-4 text-center text-white">
-          <h3 className="text-2xl font-semibold">{photo.title}</h3>
-          {photo.description && (
-            <p className="text-gray-300 mt-2">{photo.description}</p>
-          )}
-        </div>
       </div>
     </div>
   );
