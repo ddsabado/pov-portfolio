@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
+import { AdvancedImage, placeholder } from '@cloudinary/react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { getPhotoUrl, transforms, photos, Photo } from '../data/photos';
+import { getFullRes, photos, Photo } from '../data/photos';
 
 interface PhotoModalProps {
   photo: Photo;
@@ -64,8 +65,9 @@ const PhotoModal = ({ photo, onClose, onNavigate }: PhotoModalProps) => {
         className="max-w-7xl max-h-[90vh] p-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <img
-          src={getPhotoUrl(photo.publicId, transforms.fullRes)}
+        <AdvancedImage
+          cldImg={getFullRes(photo.publicId)}
+          plugins={[placeholder({ mode: 'blur' })]}
           alt={photo.title}
           className="max-w-full max-h-[85vh] object-contain"
         />

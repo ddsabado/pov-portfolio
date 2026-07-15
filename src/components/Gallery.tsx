@@ -1,9 +1,15 @@
 import { useState } from 'react';
-import { photos, getPhotoUrl, transforms, Photo } from '../data/photos';
+import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
+import { photos, getThumbnail, getFullRes, Photo } from '../data/photos';
 import PhotoModal from './PhotoModal';
 
 const Gallery = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+
+  const prefetchFullRes = (publicId: string) => {
+    const img = new Image();
+    img.src = getFullRes(publicId).toURL();
+  };
 
   return (
     <section id="gallery" className="bg-black pb-16">
@@ -18,12 +24,13 @@ const Gallery = () => {
               <div
                 key={photo.id}
                 onClick={() => setSelectedPhoto(photo)}
+                onMouseEnter={() => prefetchFullRes(photo.publicId)}
                 className="cursor-pointer aspect-[3/4]"
               >
-                <img
-                  src={getPhotoUrl(photo.publicId, transforms.thumbnail)}
+                <AdvancedImage
+                  cldImg={getThumbnail(photo.publicId)}
+                  plugins={[lazyload(), placeholder({ mode: 'blur' })]}
                   alt={photo.title}
-                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>

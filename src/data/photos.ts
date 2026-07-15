@@ -1,11 +1,31 @@
+import { Cloudinary } from '@cloudinary/url-gen';
+import { quality } from '@cloudinary/url-gen/actions/delivery';
+import { format } from '@cloudinary/url-gen/actions/delivery';
+import { fill, scale } from '@cloudinary/url-gen/actions/resize';
+import { auto } from '@cloudinary/url-gen/qualifiers/quality';
+import { auto as autoFormat } from '@cloudinary/url-gen/qualifiers/format';
+
+export const cld = new Cloudinary({
+  cloud: { cloudName: 'b9wkiwrj' },
+});
+
+export const getThumbnail = (publicId: string) =>
+  cld.image(publicId)
+    .resize(fill().width(600))
+    .delivery(quality(auto()))
+    .delivery(format(autoFormat()));
+
+export const getFullRes = (publicId: string) =>
+  cld.image(publicId)
+    .resize(scale().width(2000))
+    .delivery(quality(auto()))
+    .delivery(format(autoFormat()));
+
 export interface Photo {
   id: number;
   publicId: string;
   title: string;
 }
-
-const CLOUDINARY_CLOUD_NAME = 'b9wkiwrj';
-const CLOUDINARY_BASE_URL = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/`;
 
 export const photos: Photo[] = [
   { id: 1,  publicId: 'DSCF2327_syg04w' },
@@ -95,14 +115,3 @@ export const photos: Photo[] = [
   { id: 85, publicId: 'photo7_iae7ku' },
   { id: 86, publicId: 'photo20_put7dm' },
 ].map(p => ({ ...p, title: p.publicId.split('_')[0] }));
-
-// Helper to generate Cloudinary URLs with transformations
-export const getPhotoUrl = (publicId: string, transformation = ''): string => {
-  return `${CLOUDINARY_BASE_URL}${transformation}${publicId}`;
-};
-
-// Common transformations
-export const transforms = {
-  thumbnail: 'w_600,c_fill,q_auto,f_auto/',
-  fullRes: 'w_2000,q_auto,f_auto/',
-};
