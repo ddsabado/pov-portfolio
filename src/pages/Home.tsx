@@ -10,28 +10,35 @@ const SpotifyIcon = () => (
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)' }}>
       <Navbar />
-      
+
       {/* Hero Section */}
-      <section className="h-screen flex items-center justify-center bg-black">
-        <div className="text-center text-white px-4">
-          <h1 className="text-7xl md:text-9xl font-bold">POV</h1>
+      <section className="h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="text-center px-4">
+          <h1 className="font-display text-[32px] md:text-[46px] font-semibold leading-[1.1] tracking-tight" style={{ color: 'var(--color-ink)' }}>
+            POV
+          </h1>
         </div>
       </section>
 
       <Gallery />
 
       {/* About Section */}
-      <section id="about" className="bg-black text-white py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold mb-8">About</h2>
+      <section id="about" className="py-24" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-display text-[28px] md:text-[34px] font-medium leading-[1.2] mb-8" style={{ color: 'var(--color-ink)' }}>
+            About
+          </h2>
           <div className="flex items-center gap-6">
             <a
               href="https://www.instagram.com/ddwump/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors duration-150"
+              className="transition-colors duration-[200ms]"
+              style={{ color: 'var(--color-muted)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-accent)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
               aria-label="Instagram"
             >
               <Instagram className="w-7 h-7" />
@@ -40,7 +47,10 @@ const Home = () => {
               href="https://open.spotify.com/playlist/0pM0PYFwIvzM38bcFrdy31"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors duration-150"
+              className="transition-colors duration-[200ms]"
+              style={{ color: 'var(--color-muted)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-accent)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
               aria-label="Spotify"
             >
               <SpotifyIcon />
