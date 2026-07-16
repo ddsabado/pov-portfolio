@@ -1,7 +1,23 @@
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
 import { photoGroups, getThumbnail, getFullRes, Photo } from '../data/photos';
 import PhotoModal from './PhotoModal';
+
+const photoVariants = {
+  hidden: { opacity: 0, y: 28, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 200,
+      damping: 18,
+      mass: 0.8,
+    },
+  },
+};
 
 const Gallery = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
@@ -16,52 +32,59 @@ const Gallery = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {photoGroups.map((group, groupIndex) => {
           const { photos } = group;
-          // Alternate which column starts higher each group
-          const leftOffset = groupIndex % 2 === 0 ? '0' : 'mt-16';
-          const rightOffset = groupIndex % 2 === 0 ? 'mt-16' : '0';
+          const leftOffset = groupIndex % 2 === 0 ? '' : 'mt-16';
+          const rightOffset = groupIndex % 2 === 0 ? 'mt-16' : '';
 
-          // Split photos into left and right columns
           const leftPhotos = photos.filter((_, i) => i % 2 === 0);
           const rightPhotos = photos.filter((_, i) => i % 2 === 1);
 
           return (
             <div key={group.name} className="mb-4">
               <div className="flex gap-4 items-start">
-                {/* Left column */}
                 <div className={`flex flex-col gap-4 flex-1 ${leftOffset}`}>
                   {leftPhotos.map(photo => (
-                    <div
+                    <motion.div
                       key={photo.id}
+                      variants={photoVariants}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true, amount: 0.1 }}
                       onClick={() => setSelectedPhoto(photo)}
                       onMouseEnter={() => prefetchFullRes(photo.publicId)}
                       className="cursor-pointer overflow-hidden"
+                      whileHover={{ opacity: 0.9 }}
+                      transition={{ duration: 0.2 }}
                     >
                       <AdvancedImage
                         cldImg={getThumbnail(photo.publicId)}
                         plugins={[lazyload(), placeholder({ mode: 'blur' })]}
                         alt={photo.publicId.split('_')[0]}
-                        className="w-full object-cover hover:opacity-90 transition-opacity duration-[200ms]"
+                        className="w-full object-cover"
                       />
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
-
-                {/* Right column */}
                 <div className={`flex flex-col gap-4 flex-1 ${rightOffset}`}>
                   {rightPhotos.map(photo => (
-                    <div
+                    <motion.div
                       key={photo.id}
+                      variants={photoVariants}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true, amount: 0.1 }}
                       onClick={() => setSelectedPhoto(photo)}
                       onMouseEnter={() => prefetchFullRes(photo.publicId)}
                       className="cursor-pointer overflow-hidden"
+                      whileHover={{ opacity: 0.9 }}
+                      transition={{ duration: 0.2 }}
                     >
                       <AdvancedImage
                         cldImg={getThumbnail(photo.publicId)}
                         plugins={[lazyload(), placeholder({ mode: 'blur' })]}
                         alt={photo.publicId.split('_')[0]}
-                        className="w-full object-cover hover:opacity-90 transition-opacity duration-[200ms]"
+                        className="w-full object-cover"
                       />
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>

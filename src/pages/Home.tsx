@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { Instagram } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Gallery from '../components/Gallery';
@@ -9,17 +11,28 @@ const SpotifyIcon = () => (
 );
 
 const Home = () => {
+  const heroRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 2.4]);
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)' }}>
       <Navbar />
 
       {/* Hero Section */}
-      <section className="h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <div className="text-center px-4">
-          <h1 className="font-display text-[32px] md:text-[46px] font-semibold leading-[1.1] tracking-tight" style={{ color: 'var(--color-ink)' }}>
-            POV
-          </h1>
-        </div>
+      <section ref={heroRef} className="h-screen flex items-center justify-center overflow-hidden" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <motion.h1
+          style={{ scale, opacity, color: 'var(--color-ink)' }}
+          className="font-display text-[32px] md:text-[46px] font-semibold leading-[1.1] tracking-tight select-none"
+        >
+          POV
+        </motion.h1>
       </section>
 
       <Gallery />
