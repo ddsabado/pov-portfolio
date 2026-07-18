@@ -22,14 +22,14 @@ const Home = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)' }}>
+    <div className="min-h-screen bg-black text-white">
       <Navbar />
 
       {/* Hero Section */}
-      <section ref={heroRef} className="h-screen flex items-center justify-center overflow-hidden" style={{ backgroundColor: 'var(--color-bg)' }}>
+      <section ref={heroRef} className="h-screen flex items-center justify-center bg-black overflow-hidden">
         <motion.h1
-          style={{ scale, opacity, color: 'var(--color-ink)' }}
-          className="font-display text-[32px] md:text-[46px] font-semibold leading-[1.1] tracking-tight select-none"
+          style={{ scale, opacity }}
+          className="font-display text-[32px] md:text-[46px] font-semibold leading-[1.1] tracking-tight select-none text-white"
         >
           POV
         </motion.h1>
@@ -38,9 +38,9 @@ const Home = () => {
       <Gallery />
 
       {/* About Section */}
-      <section id="about" className="py-24" style={{ backgroundColor: 'var(--color-bg)' }}>
+      <section id="about" className="py-24 bg-black">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-[28px] md:text-[34px] font-medium leading-[1.2] mb-8" style={{ color: 'var(--color-ink)' }}>
+          <h2 className="font-display text-[28px] md:text-[34px] font-medium leading-[1.2] mb-8 text-white">
             About
           </h2>
           <div className="flex items-center gap-6">
@@ -48,10 +48,7 @@ const Home = () => {
               href="https://www.instagram.com/ddwump/"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors duration-[200ms]"
-              style={{ color: 'var(--color-muted)' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-accent)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+              className="text-gray-400 hover:text-white transition-colors duration-[200ms]"
               aria-label="Instagram"
             >
               <Instagram className="w-7 h-7" />
@@ -60,10 +57,7 @@ const Home = () => {
               href="https://open.spotify.com/playlist/0pM0PYFwIvzM38bcFrdy31"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors duration-[200ms]"
-              style={{ color: 'var(--color-muted)' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-accent)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+              className="text-gray-400 hover:text-white transition-colors duration-[200ms]"
               aria-label="Spotify"
             >
               <SpotifyIcon />
@@ -71,6 +65,12 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <footer className="bg-black py-8 text-center">
+        <p className="text-gray-600 text-[12px] font-meta tracking-[0.14em]">
+          © 2026 Dwight Sabado. All rights reserved.
+        </p>
+      </footer>
     </div>
   );
 };
