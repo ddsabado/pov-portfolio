@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
 import { photoGroups, getThumbnail, getFullRes, Photo } from '../data/photos';
 import PhotoModal from './PhotoModal';
@@ -316,13 +316,15 @@ const Gallery = () => {
         ))}
       </div>
 
-      {selectedPhoto && (
-        <PhotoModal
-          photo={selectedPhoto}
-          onClose={() => setSelectedPhoto(null)}
-          onNavigate={(photo) => setSelectedPhoto(photo)}
-        />
-      )}
+      <AnimatePresence>
+        {selectedPhoto && (
+          <PhotoModal
+            photo={selectedPhoto}
+            onClose={() => setSelectedPhoto(null)}
+            onNavigate={(photo) => setSelectedPhoto(photo)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 };

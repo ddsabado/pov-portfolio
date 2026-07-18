@@ -2,7 +2,7 @@
 
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
-  --font-display: "Fraunces", Georgia, serif;
+  --font-display: "Inter", system-ui, sans-serif;
   --font-meta: "IBM Plex Mono", ui-monospace, monospace;
 
   --color-bg: #F2E7D7;

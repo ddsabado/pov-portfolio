@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion } from 'motion/react';
 import { Instagram } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Gallery from '../components/Gallery';
@@ -11,36 +10,24 @@ const SpotifyIcon = () => (
 );
 
 const Home = () => {
-  const heroRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
-
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 2.4]);
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-
   return (
-    <div className="min-h-screen bg-black text-white">
+    <motion.div
+      className="min-h-screen bg-black text-white"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, ease: 'easeInOut' }}
+    >
       <Navbar />
 
-      {/* Hero Section */}
-      <section ref={heroRef} className="h-screen flex items-center justify-center bg-black overflow-hidden">
-        <motion.h1
-          style={{ scale, opacity }}
-          className="font-display text-[32px] md:text-[46px] font-semibold leading-[1.1] tracking-tight select-none text-white"
-        >
-          POV
-        </motion.h1>
-      </section>
+      {/* Spacer for fixed navbar + breathing room */}
+      <div className="h-20" />
 
       <Gallery />
 
       {/* About Section */}
       <section id="about" className="py-24 bg-black">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-[28px] md:text-[34px] font-medium leading-[1.2] mb-8 text-white">
+          <h2 className="text-[28px] md:text-[34px] font-semibold leading-[1.2] mb-8 text-white">
             About
           </h2>
           <div className="flex items-center gap-6">
@@ -71,7 +58,7 @@ const Home = () => {
           © 2026 Dwight Sabado. All rights reserved.
         </p>
       </footer>
-    </div>
+    </motion.div>
   );
 };
 

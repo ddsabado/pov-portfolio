@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useTransform, animate } from 'motion/react';
-import { Camera } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
 
 const Navbar = () => {
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,9 +13,9 @@ const Navbar = () => {
       if (currentY < 80) {
         setVisible(true);
       } else if (currentY > lastScrollY.current) {
-        setVisible(false); // scrolling down
+        setVisible(false);
       } else {
-        setVisible(true);  // scrolling up
+        setVisible(true);
       }
       lastScrollY.current = currentY;
     };
@@ -30,16 +31,18 @@ const Navbar = () => {
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <Camera className="w-5 h-5 text-gray-400" />
-            <span className="font-display text-lg font-medium tracking-tight">POV</span>
-          </div>
-          <div className="flex items-center gap-6 text-[14px] font-medium leading-[1.4]">
-            <a href="#gallery" className="text-gray-400 hover:text-white transition-colors duration-[200ms]">
+        <div className="flex items-center justify-between h-14">
+          <span
+            onClick={() => navigate('/')}
+            className="font-bold text-2xl tracking-tight cursor-pointer hover:text-gray-300 transition-colors duration-[200ms]"
+          >
+            DDWUMP
+          </span>
+          <div className="flex items-center gap-6 text-[12px] font-light leading-[1.4] text-gray-400">
+            <a href="#gallery" className="hover:text-white transition-colors duration-[200ms]">
               Gallery
             </a>
-            <a href="#about" className="text-gray-400 hover:text-white transition-colors duration-[200ms]">
+            <a href="#about" className="hover:text-white transition-colors duration-[200ms]">
               About
             </a>
           </div>
