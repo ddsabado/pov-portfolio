@@ -23,7 +23,7 @@ const gears: GearItem[] = [
 ];
 
 const RADIUS = 280;
-const ITEM_SIZE = 120;
+const ITEM_SIZE = 180;
 // Items at 0°=x100v, 90°=ixus, 180°=osmo, 270°=godox
 // Active position = 0° (3 o'clock). Initial rotation = 0 → x100v at 0° ✓
 const BASE_ANGLES = [0, 90, 180, 270];
@@ -84,17 +84,16 @@ export default function Gear() {
         {/* Left — Half dial */}
         <div className="relative flex-shrink-0" style={{ width: '340px' }}>
 
-          {/* Circle outlines — center at left edge */}
-          <div className="absolute rounded-full pointer-events-none" style={{ width: RADIUS*2, height: RADIUS*2, left: -RADIUS, top: '50%', marginTop: -RADIUS, border: '1px solid rgba(255,255,255,0.08)' }} />
-          <div className="absolute rounded-full pointer-events-none" style={{ width: RADIUS*1.3, height: RADIUS*1.3, left: -RADIUS*0.65, top: '50%', marginTop: -RADIUS*0.65, border: '1px solid rgba(255,255,255,0.03)' }} />
-
-          {/* Rotating wheel */}
+          {/* Rotating wheel — circles inside so stacking context is shared */}
           <motion.div
             className="absolute"
             style={{ width: RADIUS*2, height: RADIUS*2, left: -RADIUS, top: '50%', marginTop: -RADIUS }}
             animate={{ rotate: rotation }}
             transition={{ type: 'spring', stiffness: 160, damping: 28, mass: 1 }}
           >
+            {/* Circle outlines inside wheel — behind images */}
+            <div className="absolute rounded-full pointer-events-none" style={{ inset: 0, border: '6px solid rgba(255,255,255,0.08)', zIndex: 0 }} />
+            <div className="absolute rounded-full pointer-events-none" style={{ inset: `${RADIUS * 0.35}px`, border: '5px solid rgba(255,255,255,0.03)', zIndex: 0 }} />
             {gears.map((gear, i) => {
               const angleDeg = BASE_ANGLES[i];
               const angleRad = (angleDeg * Math.PI) / 180;
@@ -106,7 +105,7 @@ export default function Gear() {
                 <motion.div
                   key={gear.id}
                   className="absolute cursor-pointer flex items-center justify-center"
-                  style={{ width: ITEM_SIZE, height: ITEM_SIZE, left: cx, top: cy }}
+                  style={{ width: ITEM_SIZE, height: ITEM_SIZE, left: cx, top: cy, zIndex: 1 }}
                   onClick={() => !isActive && cycle(((i - activeIndex + gears.length) % gears.length === 1 ? 1 : -1) as 1 | -1)}
                 >
                   {/* Counter-rotate so images stay upright */}
@@ -114,15 +113,13 @@ export default function Gear() {
                     src={gear.image}
                     alt={gear.name}
                     className="w-full h-full object-contain"
-                    animate={{ rotate: -rotation, opacity: isActive ? 1 : 0.4, scale: isActive ? 1.1 : 0.75 }}
+                    animate={{ rotate: -rotation, opacity: 1, scale: isActive ? 1.1 : 0.75 }}
                     transition={{ type: 'spring', stiffness: 160, damping: 28, mass: 1 }}
                   />
                 </motion.div>
               );
             })}
           </motion.div>
-
-          <p className="absolute bottom-8 left-8 text-[11px] font-meta text-gray-600 tracking-widest uppercase">Scroll to browse</p>
         </div>
 
         {/* Right — Gear details */}
@@ -143,14 +140,6 @@ export default function Gear() {
             </motion.div>
           </AnimatePresence>
 
-          <div className="flex gap-2 mt-12">
-            {gears.map((_, i) => (
-              <motion.div key={i} className="h-px bg-white"
-                animate={{ width: i === activeIndex ? 24 : 8, opacity: i === activeIndex ? 1 : 0.25 }}
-                transition={{ duration: 0.3 }}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </div>
