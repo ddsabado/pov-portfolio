@@ -1,20 +1,35 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, stagger } from 'motion/react';
 import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
 import { photoGroups, getThumbnail, getFullRes, Photo } from '../data/photos';
 import PhotoModal from './PhotoModal';
 
+// Parent group — triggers stagger when it enters viewport
+const groupVariants = {
+  hidden: {
+    opacity: 0,
+    transition: { duration: 0.4, ease: 'easeInOut' },
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: stagger(0.12),
+    },
+  },
+};
+
+// Individual photo card
 const photoVariants = {
-  hidden: { opacity: 0, y: 28, scale: 0.96 },
+  hidden: { opacity: 0, y: 48, scale: 0.93 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
       type: 'spring',
-      stiffness: 200,
-      damping: 18,
-      mass: 0.8,
+      stiffness: 120,
+      damping: 16,
+      mass: 1,
     },
   },
 };
@@ -30,14 +45,10 @@ const PhotoCard = ({
 }) => (
   <motion.div
     variants={photoVariants}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true, amount: 0.1 }}
     onClick={onClick}
     onMouseEnter={onMouseEnter}
     className="cursor-pointer overflow-hidden w-full h-full"
-    whileHover={{ opacity: 0.9 }}
-    transition={{ duration: 0.2 }}
+    whileHover={{ opacity: 0.9, transition: { duration: 0.2 } }}
   >
     <AdvancedImage
       cldImg={getThumbnail(photo.publicId)}
@@ -310,9 +321,17 @@ const Gallery = () => {
     <section id="gallery" className="bg-black pb-24" style={{ scrollMarginTop: '80px' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {photoGroups.map((group, groupIndex) => (
-          <div key={group.name} className="mb-24">
+          <motion.div
+            key={group.name}
+            className="mb-24"
+            variants={groupVariants}
+            initial="hidden"
+            whileInView="visible"
+            exit="hidden"
+            viewport={{ once: false, amount: 0.05 }}
+          >
             {renderGroup(group, groupIndex)}
-          </div>
+          </motion.div>
         ))}
       </div>
 

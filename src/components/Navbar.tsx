@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
 
 const Navbar = () => {
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,10 +42,24 @@ const Navbar = () => {
           <div className="flex items-center gap-6 text-[14px] font-light leading-[1.4] text-gray-400">
             <a
               href="#gallery"
-              onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              onClick={(e) => {
+                e.preventDefault();
+                if (location.pathname !== '/gallery') {
+                  navigate('/gallery');
+                } else {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
               className="hover:text-white transition-colors duration-[200ms]"
             >
               Scroll Gallery
+            </a>
+            <a
+              href="/gear"
+              onClick={(e) => { e.preventDefault(); navigate('/gear'); }}
+              className="hover:text-white transition-colors duration-[200ms]"
+            >
+              Gear
             </a>
             <a href="#about" className="hover:text-white transition-colors duration-[200ms]">
               About
