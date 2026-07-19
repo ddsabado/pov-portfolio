@@ -74,47 +74,55 @@ export default function Gear() {
     exit: (dir: number) => ({ y: dir > 0 ? -40 : 40, opacity: 0, transition: { duration: 0.25, ease: 'easeIn' } }),
   };
 
+  // Responsive radius — use window dimensions to detect landscape mobile
+  const vw = typeof window !== 'undefined' ? window.innerWidth : 1024;
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 768;
+  const isDesktop = vw >= 768;
+  const isLandscapeMobile = !isDesktop && vw > vh;
+  const r = isDesktop ? RADIUS : isLandscapeMobile ? 120 : 160;
+  const itemSize = isDesktop ? ITEM_SIZE : isLandscapeMobile ? 60 : 80;
+
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
       <Navbar />
       <div className="h-14" />
 
-      <div className="flex h-[calc(100vh-56px)]">
+      {/* Portrait: stacked. Landscape / desktop: side by side */}
+      <div className="flex flex-col md:flex-row h-[calc(100vh-56px)]">
 
-        {/* Left — Half dial */}
-        <div className="relative flex-shrink-0" style={{ width: '340px' }}>
+        {/* Dial — takes less space on mobile */}
+        <div className="relative flex-shrink-0 md:w-[340px] w-full md:h-full h-1/2" >
 
-          {/* Circle outlines as SVG — no stacking context issues */}
+          {/* Circle outlines */}
           <svg
             className="absolute pointer-events-none"
-            style={{ left: -RADIUS, top: '50%', marginTop: -RADIUS, width: RADIUS*2, height: RADIUS*2, overflow: 'visible' }}
+            style={{ left: -r, top: '50%', marginTop: -r, width: r*2, height: r*2, overflow: 'visible' }}
           >
-            <circle cx={RADIUS} cy={RADIUS} r={RADIUS} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="6" />
-            <circle cx={RADIUS} cy={RADIUS} r={RADIUS * 0.65} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="5" />
+            <circle cx={r} cy={r} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="4" />
+            <circle cx={r} cy={r} r={r * 0.65} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="3" />
           </svg>
 
           {/* Rotating wheel */}
           <motion.div
             className="absolute"
-            style={{ width: RADIUS*2, height: RADIUS*2, left: -RADIUS, top: '50%', marginTop: -RADIUS }}
+            style={{ width: r*2, height: r*2, left: -r, top: '50%', marginTop: -r }}
             animate={{ rotate: rotation }}
             transition={{ type: 'spring', stiffness: 160, damping: 28, mass: 1 }}
           >
             {gears.map((gear, i) => {
               const angleDeg = BASE_ANGLES[i];
               const angleRad = (angleDeg * Math.PI) / 180;
-              const cx = RADIUS + RADIUS * Math.cos(angleRad) - ITEM_SIZE / 2;
-              const cy = RADIUS + RADIUS * Math.sin(angleRad) - ITEM_SIZE / 2;
+              const cx = r + r * Math.cos(angleRad) - itemSize / 2;
+              const cy = r + r * Math.sin(angleRad) - itemSize / 2;
               const isActive = i === activeIndex;
 
               return (
                 <motion.div
                   key={gear.id}
                   className="absolute cursor-pointer flex items-center justify-center"
-                  style={{ width: ITEM_SIZE, height: ITEM_SIZE, left: cx, top: cy, zIndex: 1 }}
+                  style={{ width: itemSize, height: itemSize, left: cx, top: cy, zIndex: 1 }}
                   onClick={() => !isActive && cycle(((i - activeIndex + gears.length) % gears.length === 1 ? 1 : -1) as 1 | -1)}
                 >
-                  {/* Counter-rotate so images stay upright */}
                   <motion.img
                     src={gear.image}
                     alt={gear.name}
@@ -128,16 +136,16 @@ export default function Gear() {
           </motion.div>
         </div>
 
-        {/* Right — Gear details */}
-        <div className="flex-1 flex flex-col justify-center px-16 max-w-2xl">
+        {/* Gear details */}
+        <div className="flex-1 flex flex-col justify-center px-6 md:px-16 overflow-y-auto md:overflow-visible md:max-w-2xl">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div key={active.id} custom={direction} variants={textVariants} initial="enter" animate="center" exit="exit">
-              <h1 className="text-[42px] font-bold leading-[1.05] tracking-tight mb-2">{active.name}</h1>
-              <p className="font-meta text-gray-500 text-[13px] tracking-[0.2em] uppercase mb-8">{active.subtitle}</p>
-              <p className="text-gray-300 text-[16px] leading-[1.75] font-light mb-10 max-w-lg">{active.description}</p>
-              <ul className="flex flex-col gap-2">
+              <h1 className="text-[18px] md:text-[42px] font-bold leading-[1.05] tracking-tight mb-1 md:mb-2">{active.name}</h1>
+              <p className="font-meta text-gray-500 text-[10px] md:text-[13px] tracking-[0.15em] uppercase mb-2 md:mb-8">{active.subtitle}</p>
+              <p className="text-gray-300 text-[11px] md:text-[16px] leading-[1.5] md:leading-[1.75] font-light mb-3 md:mb-10 max-w-lg">{active.description}</p>
+              <ul className="flex flex-col gap-1 md:gap-2">
                 {active.specs.map(spec => (
-                  <li key={spec} className="flex items-center gap-3 text-[13px] text-gray-400 font-meta">
+                  <li key={spec} className="flex items-center gap-2 text-[10px] md:text-[13px] text-gray-400 font-meta">
                     <span className="w-1 h-1 rounded-full bg-gray-600 flex-shrink-0" />
                     {spec}
                   </li>
@@ -145,7 +153,6 @@ export default function Gear() {
               </ul>
             </motion.div>
           </AnimatePresence>
-
         </div>
       </div>
     </div>
