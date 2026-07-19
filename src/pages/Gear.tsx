@@ -84,16 +84,22 @@ export default function Gear() {
         {/* Left — Half dial */}
         <div className="relative flex-shrink-0" style={{ width: '340px' }}>
 
-          {/* Rotating wheel — circles inside so stacking context is shared */}
+          {/* Circle outlines as SVG — no stacking context issues */}
+          <svg
+            className="absolute pointer-events-none"
+            style={{ left: -RADIUS, top: '50%', marginTop: -RADIUS, width: RADIUS*2, height: RADIUS*2, overflow: 'visible' }}
+          >
+            <circle cx={RADIUS} cy={RADIUS} r={RADIUS} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="6" />
+            <circle cx={RADIUS} cy={RADIUS} r={RADIUS * 0.65} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="5" />
+          </svg>
+
+          {/* Rotating wheel */}
           <motion.div
             className="absolute"
             style={{ width: RADIUS*2, height: RADIUS*2, left: -RADIUS, top: '50%', marginTop: -RADIUS }}
             animate={{ rotate: rotation }}
             transition={{ type: 'spring', stiffness: 160, damping: 28, mass: 1 }}
           >
-            {/* Circle outlines inside wheel — behind images */}
-            <div className="absolute rounded-full pointer-events-none" style={{ inset: 0, border: '6px solid rgba(255,255,255,0.08)', zIndex: 0 }} />
-            <div className="absolute rounded-full pointer-events-none" style={{ inset: `${RADIUS * 0.35}px`, border: '5px solid rgba(255,255,255,0.03)', zIndex: 0 }} />
             {gears.map((gear, i) => {
               const angleDeg = BASE_ANGLES[i];
               const angleRad = (angleDeg * Math.PI) / 180;
