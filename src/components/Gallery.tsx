@@ -307,7 +307,7 @@ const Gallery = () => {
   };
 
   return (
-    <section id="gallery" className="bg-black pb-24">
+    <section id="gallery" className="bg-black pb-24" style={{ scrollMarginTop: '80px' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {photoGroups.map((group, groupIndex) => (
           <div key={group.name} className="mb-24">

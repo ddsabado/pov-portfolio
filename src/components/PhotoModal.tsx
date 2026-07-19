@@ -1,6 +1,6 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { XCircle, ChevronLeftCircle, ChevronRightCircle } from 'lucide-react';
 import { getFullRes, photos, Photo } from '../data/photos';
 
 interface PhotoModalProps {
@@ -10,6 +10,36 @@ interface PhotoModalProps {
 }
 
 const PhotoModal = ({ photo, onClose, onNavigate }: PhotoModalProps) => {
+  const [leftVisible, setLeftVisible] = useState(true);
+  const [rightVisible, setRightVisible] = useState(true);
+  const leftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rightTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Fade out arrows shortly after modal opens
+  useEffect(() => {
+    leftTimer.current = setTimeout(() => setLeftVisible(false), 1500);
+    rightTimer.current = setTimeout(() => setRightVisible(false), 1500);
+    return () => {
+      if (leftTimer.current) clearTimeout(leftTimer.current);
+      if (rightTimer.current) clearTimeout(rightTimer.current);
+    };
+  }, []);
+
+  const showLeft = () => {
+    if (leftTimer.current) clearTimeout(leftTimer.current);
+    setLeftVisible(true);
+  };
+  const hideLeft = () => {
+    leftTimer.current = setTimeout(() => setLeftVisible(false), 400);
+  };
+  const showRight = () => {
+    if (rightTimer.current) clearTimeout(rightTimer.current);
+    setRightVisible(true);
+  };
+  const hideRight = () => {
+    rightTimer.current = setTimeout(() => setRightVisible(false), 400);
+  };
+
   const navigatePhoto = useCallback((direction: number) => {
     const currentIndex = photos.findIndex(p => p.id === photo.id);
     const newIndex = (currentIndex + direction + photos.length) % photos.length;
@@ -44,30 +74,50 @@ const PhotoModal = ({ photo, onClose, onNavigate }: PhotoModalProps) => {
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         onClick={onClose}
       >
+        {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors duration-[200ms] z-10"
+          className="absolute top-6 right-8 text-white hover:text-gray-300 transition-colors duration-[200ms] z-10"
           aria-label="Close modal"
         >
-          <X className="w-8 h-8" />
+          <XCircle className="w-8 h-8" />
         </button>
 
-        <button
-          onClick={(e) => { e.stopPropagation(); navigatePhoto(-1); }}
-          className="absolute left-4 text-white hover:text-gray-300 transition-colors duration-[200ms] z-10"
-          aria-label="Previous photo"
+        {/* Left hover zone */}
+        <div
+          className="absolute left-0 top-0 w-1/4 h-full z-10 flex items-center"
+          onMouseEnter={showLeft}
+          onMouseLeave={hideLeft}
         >
-          <ChevronLeft className="w-10 h-10" />
-        </button>
+          <motion.button
+            onClick={(e) => { e.stopPropagation(); navigatePhoto(-1); }}
+            className="ml-8 text-white z-10"
+            aria-label="Previous photo"
+            animate={{ opacity: leftVisible ? 1 : 0 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+          >
+            <ChevronLeftCircle className="w-10 h-10" />
+          </motion.button>
+        </div>
 
-        <button
-          onClick={(e) => { e.stopPropagation(); navigatePhoto(1); }}
-          className="absolute right-4 text-white hover:text-gray-300 transition-colors duration-[200ms] z-10"
-          aria-label="Next photo"
+        {/* Right hover zone */}
+        <div
+          className="absolute right-0 top-0 w-1/4 h-full z-10 flex items-center justify-end"
+          onMouseEnter={showRight}
+          onMouseLeave={hideRight}
         >
-          <ChevronRight className="w-10 h-10" />
-        </button>
+          <motion.button
+            onClick={(e) => { e.stopPropagation(); navigatePhoto(1); }}
+            className="mr-8 text-white z-10"
+            aria-label="Next photo"
+            animate={{ opacity: rightVisible ? 1 : 0 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+          >
+            <ChevronRightCircle className="w-10 h-10" />
+          </motion.button>
+        </div>
 
+        {/* Photo */}
         <motion.div
           key={photo.id}
           className="max-w-7xl max-h-[90vh] p-4"

@@ -38,9 +38,13 @@ const Navbar = () => {
           >
             DDWUMP
           </span>
-          <div className="flex items-center gap-6 text-[12px] font-light leading-[1.4] text-gray-400">
-            <a href="#gallery" className="hover:text-white transition-colors duration-[200ms]">
-              Gallery
+          <div className="flex items-center gap-6 text-[14px] font-light leading-[1.4] text-gray-400">
+            <a
+              href="#gallery"
+              onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className="hover:text-white transition-colors duration-[200ms]"
+            >
+              Scroll Gallery
             </a>
             <a href="#about" className="hover:text-white transition-colors duration-[200ms]">
               About
