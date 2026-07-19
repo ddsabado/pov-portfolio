@@ -39,6 +39,14 @@ const Landing = () => {
     setTimeout(() => navigate('/gallery'), 800);
   }, [navigate, exiting]);
 
+  // Preload all landing images on mount
+  useEffect(() => {
+    landingPhotos.forEach(id => {
+      const img = new Image();
+      img.src = getUrl(id);
+    });
+  }, []);
+
   // Disable scrolling
   useEffect(() => {
     document.body.style.overflow = 'hidden';

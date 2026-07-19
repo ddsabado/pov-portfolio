@@ -61,7 +61,11 @@ const Navbar = () => {
             >
               Gear
             </a>
-            <a href="#about" className="hover:text-white transition-colors duration-[200ms]">
+            <a
+              href="/about"
+              onClick={(e) => { e.preventDefault(); navigate('/about'); }}
+              className="hover:text-white transition-colors duration-[200ms]"
+            >
               About
             </a>
           </div>
